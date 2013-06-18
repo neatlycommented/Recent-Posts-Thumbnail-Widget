@@ -43,9 +43,9 @@ Sometimes you just want to go minimal. In that case, you can hide the title and/
 **Thumbnail Size**
 Finally, you can select the size of thumbnail to display. Valid values include "medium," "large," "full," and any custom images sizes registered with `add_image_size()` - "thumbnail" is also valid, but it's the default so no need to declare it. E.g.:
 
-    [neatly_recent thumb_size="medium"]
+`[neatly_recent thumb_size="medium"]`
 
-    [neatly_recent thumb_size="custom-size"]
+`[neatly_recent thumb_size="custom-size"]`
 
 
 Changelog
