@@ -5,6 +5,14 @@ This is a simple WordPress plugin that creates a recent posts widget that displa
 
 Very little styling has been applied so that the theme designer, developer or use can easily customize the appearance.
 
+
+Installation
+------------
+To install, download the plugins zip file. Within your WordPress admin, navigation to Plugins > Add New and click "Upload." Browse to the zip file and upload it, then click to activate it.
+
+You'll then see a new widget in your Appearance > Widgets screen. Add the widget to your sidebar and configure and style as desired.
+
+
 Changelog
 ------------
 * 0.2 Added ability to show/hide titles and dates
