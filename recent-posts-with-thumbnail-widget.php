@@ -8,7 +8,7 @@ Author: Zoe Rooney
 Author URI: http://zoerooney.com
 License: GPL2
 
-Copyright 2013 Zoe Roone (hello@zoerooney.com)
+Copyright 2013 Zoe Rooney (hello@zoerooney.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
@@ -78,6 +78,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
             
             echo $after_widget; // ends the widget
         }
+        	  
 	
 	/* Saving updated information
 	=============================================*/
@@ -122,5 +123,59 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 }
 
 add_action('widgets_init', create_function('', 'return register_widget("neatly_recent_posts_thumbnail");')); 
+
+
+/* Create a shortcode version
+=============================================*/
+function neatly_recent_shortcode( $atts, $content = null ) {
+	extract( shortcode_atts( array(
+		'title_text' => 'Recent Posts',
+		'number_posts' => '3',
+		'show_title' => 'true',
+		'show_date' => 'true',
+		'thumb_size' => 'thumbnail'
+	), $atts ) );
+		
+	$query_args = array (
+		'posts_per_page' => $number_posts,
+	);
+	$neatly_recent_shortcode = new WP_Query($query_args);
+	ob_start();
+	if ( $neatly_recent_shortcode->have_posts() ) : ?>
+		<div class="neatly-recent neatly-recent-shortcode"><h3><?php echo $title_text; ?></h3><ul>
+		<?php while ( $neatly_recent_shortcode->have_posts() ) : $neatly_recent_shortcode->the_post(); ?>
+		
+			<li><a href="<?php the_permalink(); ?>">
+				<?php 
+				if ( has_post_thumbnail() ) : 
+					the_post_thumbnail(); 
+				endif; ?>
+				<?php if ( $show_title == true ) : ?> 
+				 	<h4><?php $the_title(); ?></h4>
+				<?php endif; ?>
+				<?php if ( $show_date == true ) : ?>
+					<span><?php the_date(); ?></span>
+				<?php endif; ?>
+			</a></li>
+		
+		<?php endwhile; ?>
+		
+		</ul></div>
+		
+	
+	<?php else :
+		
+	 	echo 'No posts found';
+	
+	endif; 
+		
+	wp_reset_query(); 
+	
+	$content = ob_get_contents();
+	ob_end_clean();
+	return $content;
+	
+}	
+add_shortcode( 'neatly_recent', 'neatly_recent_shortcode' );
 
 ?>
