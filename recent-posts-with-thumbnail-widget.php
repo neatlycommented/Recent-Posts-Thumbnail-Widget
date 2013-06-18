@@ -45,6 +45,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 			
 			$title = $instance['title']; 
 			$number = $instance['number'];
+			$thumbsize = $instance['thumbsize'];
 			$show_title = isset($instance['show_title']) ? $instance['show_title'] : true;
 			$show_date = isset($instance['show_date']) ? $instance['show_date'] : true;
 		
@@ -65,7 +66,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
   				echo '<ul>';
   				while( $neatly_posts->have_posts() ) : $neatly_posts->the_post(); ?>
   					<li><a href="<?php the_permalink(); ?>">
-  						<?php if ( has_post_thumbnail() ) : the_post_thumbnail(); endif; ?>
+  						<?php if ( has_post_thumbnail() ) : the_post_thumbnail($thumbsize); endif; ?>
   						<?php if ( $show_title == true ) : ?><h4><?php the_title(); ?></h4><?php endif; ?>
   						<?php if ( $show_date == true ) : ?><span><?php the_date(); ?></span><?php endif; ?>
   						</a>
@@ -88,6 +89,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
         
         $instance['title'] = strip_tags($new_instance['title']);
         $instance['number'] = strip_tags($new_instance['number']);
+        $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
         $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
         $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
           
@@ -102,6 +104,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
        $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) ); 
         $title = strip_tags($instance['title']);
         $number = strip_tags($instance['number']);
+        $thumbsize = strip_tags($instance['thumbsize']);
 		?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
@@ -110,6 +113,8 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 		<p style="border-bottom:4px double #eee;padding: 0 0 10px;">
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>">Number of Posts Displayed</label>
 			<input id="<?php echo $this->get_field_id( 'number'); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo esc_attr($number); ?>" type="number" style="width:100%;" /><br>
+			<label for="<?php echo $this->get_field_id( 'thumbsize' ); ?>">Thumbnail Size</label>
+			<input id="<?php echo $this->get_field_id( 'thumbsize'); ?>" name="<?php echo $this->get_field_name( 'thumbsize' ); ?>" value="<?php echo esc_attr($thumbsize); ?>"  style="width:100%;" /><br><br>
 			<label for="<?php echo $this->get_field_id( 'show_title' ); ?>">Show the post titles?
 			<input id="<?php echo $this->get_field_id( 'show_title'); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" <?php checked($instance['show_title'], true) ?>  type="checkbox" /></label><br><br>
 			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>">Show the post dates?
@@ -127,54 +132,41 @@ add_action('widgets_init', create_function('', 'return register_widget("neatly_r
 
 /* Create a shortcode version
 =============================================*/
-function neatly_recent_shortcode( $atts, $content = null ) {
+// [neatly_recent]
+// See documentation: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
+function neatly_recent_shortcode( $atts ) {
 	extract( shortcode_atts( array(
 		'title_text' => 'Recent Posts',
 		'number_posts' => '3',
-		'show_title' => 'true',
-		'show_date' => 'true',
+		'hide_title' => 'false',
+		'hide_date' => 'false',
 		'thumb_size' => 'thumbnail'
 	), $atts ) );
-		
-	$query_args = array (
-		'posts_per_page' => $number_posts,
-	);
-	$neatly_recent_shortcode = new WP_Query($query_args);
+	
 	ob_start();
-	if ( $neatly_recent_shortcode->have_posts() ) : ?>
-		<div class="neatly-recent neatly-recent-shortcode"><h3><?php echo $title_text; ?></h3><ul>
-		<?php while ( $neatly_recent_shortcode->have_posts() ) : $neatly_recent_shortcode->the_post(); ?>
-		
+	
+	$neatly_loop = new WP_Query( array(
+		'posts_per_page' => $number_posts
+	));
+	echo '<div class="neatly-recent neatly-recent-shortcode"><h3>' . $title_text . '</h3>';
+	 if ( $neatly_loop->have_posts() ) : ?>
+		<ul>
+		<?php while ( $neatly_loop->have_posts() ) : $neatly_loop->the_post(); ?>
 			<li><a href="<?php the_permalink(); ?>">
-				<?php 
-				if ( has_post_thumbnail() ) : 
-					the_post_thumbnail(); 
-				endif; ?>
-				<?php if ( $show_title == true ) : ?> 
-				 	<h4><?php $the_title(); ?></h4>
-				<?php endif; ?>
-				<?php if ( $show_date == true ) : ?>
-					<span><?php the_date(); ?></span>
-				<?php endif; ?>
+				<?php the_post_thumbnail($thumb_size); ?>
+				<?php if ( $hide_title == 'false' ) { ?><h4><?php the_title(); ?></h4><?php } else {} ?>
+				<?php if ( $hide_date == 'false' ) { ?><span><?php echo get_the_date(); ?></span><?php } else {}  ?>
 			</a></li>
-		
 		<?php endwhile; ?>
-		
-		</ul></div>
-		
-	
-	<?php else :
-		
-	 	echo 'No posts found';
-	
-	endif; 
-		
-	wp_reset_query(); 
-	
+		</ul>
+	<?php else : ?>
+	 	No posts found.
+	<?php endif; 
+	echo '</div>';
+	$wp_reset_postdata();
 	$content = ob_get_contents();
 	ob_end_clean();
 	return $content;
-	
 }	
 add_shortcode( 'neatly_recent', 'neatly_recent_shortcode' );
 
