@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Recent Posts with Thumbnails Widget
-Plugin URI: http://zoerooney.com
+Plugin URI: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
 Description: Creates a widget that displays recent posts in a nice, easy to style layout.
-Version: 0.2
+Version: 0.3
 Author: Zoe Rooney
 Author URI: http://zoerooney.com
 License: GPL2
