@@ -24,7 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/* Adds our Custom Social Media Icons widget
+/* Adds our widget
 =============================================*/
 
 class neatly_recent_posts_thumbnail extends WP_Widget {
