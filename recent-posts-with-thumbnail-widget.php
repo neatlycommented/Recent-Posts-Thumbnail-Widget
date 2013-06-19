@@ -3,7 +3,7 @@
 Plugin Name: Recent Posts with Thumbnails Widget
 Plugin URI: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
 Description: Creates a widget that displays recent posts in a nice, easy to style layout.
-Version: 0.3
+Version: 0.4
 Author: Zoe Rooney
 Author URI: http://zoerooney.com
 License: GPL2
@@ -34,6 +34,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
             'classname'=>'neatly-recent', // class that will be added to li element in widgeted area ul
             'description'=> __('Display recent posts with thumbnails') // description displayed in admin
             );
+        $control_ops = array( 'id_base' => 'neatly-recent-posts' );
         $this->WP_Widget('neatly_recent_posts_thumbnail', __('Recent Posts with Thumbnails'), $widget_ops, $control_ops); // Name in  the control panel
     }
 	
@@ -163,7 +164,7 @@ function neatly_recent_shortcode( $atts ) {
 	 	No posts found.
 	<?php endif; 
 	echo '</div>';
-	$wp_reset_postdata();
+	wp_reset_postdata();
 	$content = ob_get_contents();
 	ob_end_clean();
 	return $content;
