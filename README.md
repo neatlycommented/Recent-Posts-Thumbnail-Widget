@@ -53,7 +53,7 @@ Finally, you can select the size of thumbnail to display. Valid values include "
 
 Changelog
 ------------
-* 0.4 Fixed syntax error (hat tip @clintonwilmott)
+* 0.4 Fixed syntax error (hat tip [@clintonwilmott](http://twitter.com/clintonwilmott))
 * 0.3 Added shortcode and thumb size options
 * 0.2 Added ability to show/hide titles and dates
 * 0.1 Initial build
