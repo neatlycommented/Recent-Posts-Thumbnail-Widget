@@ -135,7 +135,7 @@ add_action('widgets_init', create_function('', 'return register_widget("neatly_r
 =============================================*/
 // [neatly_recent]
 // See documentation: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
-function neatly_recent_shortcode( $atts ) {
+function neatly_recent_posts_shortcode( $atts ) {
 	extract( shortcode_atts( array(
 		'title_text' => 'Recent Posts',
 		'number_posts' => '3',
@@ -169,6 +169,6 @@ function neatly_recent_shortcode( $atts ) {
 	ob_end_clean();
 	return $content;
 }	
-add_shortcode( 'neatly_recent', 'neatly_recent_shortcode' );
+add_shortcode( 'neatly_recent_posts', 'neatly_recent_posts_shortcode' );
 
 ?>
