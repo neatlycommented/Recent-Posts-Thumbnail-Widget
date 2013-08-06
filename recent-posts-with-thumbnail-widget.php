@@ -3,7 +3,7 @@
 Plugin Name: Recent Posts with Thumbnails Widget
 Plugin URI: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
 Description: Creates a widget that displays recent posts in a nice, easy to style layout.
-Version: 0.4
+Version: 0.5
 Author: Zoe Rooney
 Author URI: http://zoerooney.com
 License: GPL2
@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 class neatly_recent_posts_thumbnail extends WP_Widget {
 
-    function neatly_recent_posts_thumbnail() {
+    public function neatly_recent_posts_thumbnail() {
         $widget_ops = array(
             'classname'=>'neatly-recent', // class that will be added to li element in widgeted area ul
             'description'=> __('Display recent posts with thumbnails') // description displayed in admin
@@ -41,7 +41,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 	/* Our arguments
 	=============================================*/
 		
-    function widget($args, $instance) {
+    public function widget($args, $instance) {
             extract($args);
 			
 			$title = $instance['title']; 
@@ -80,28 +80,12 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
             
             echo $after_widget; // ends the widget
         }
-        	  
-	
-	/* Saving updated information
-	=============================================*/
-	
-    function update( $new_instance, $old_instance ) {
-        $instance = $old_instance;
-        
-        $instance['title'] = strip_tags($new_instance['title']);
-        $instance['number'] = strip_tags($new_instance['number']);
-        $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
-        $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
-        $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
-          
-        return $instance;
-    }
-        
+        	         
 	
 	/* The widget configuration form
 	=============================================*/
 	
-    function form( $instance ) {
+    public function form( $instance ) {
        $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) ); 
         $title = strip_tags($instance['title']);
         $number = strip_tags($instance['number']);
@@ -120,22 +104,40 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 			<input id="<?php echo $this->get_field_id( 'show_title'); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" <?php checked($instance['show_title'], true) ?>  type="checkbox" /></label><br><br>
 			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>">Show the post dates?
 			<input id="<?php echo $this->get_field_id( 'show_date'); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" <?php checked($instance['show_date'], true) ?>  type="checkbox" /></label>
-		</p>
-	    
-	    
+		</p>	    
 	 
-<?php
+		<?php
+		}
+	
+	/* Saving updated information
+	=============================================*/
+	
+	public function update( $new_instance, $old_instance ) {
+	    $instance = $old_instance;
+	    
+	    $instance['title'] = strip_tags($new_instance['title']);
+	    $instance['number'] = strip_tags($new_instance['number']);
+	    $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
+	    $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
+	    $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
+	      
+	    return $instance;
 	}
+	
 }
 
-add_action('widgets_init', create_function('', 'return register_widget("neatly_recent_posts_thumbnail");')); 
+// register widget
+function register_neatly_recent_posts_thumbnail() {
+    register_widget( 'Recent Posts with Thumbnails' );
+}
+add_action( 'widgets_init', 'register_neatly_recent_posts_thumbnail' );
 
 
 /* Create a shortcode version
 =============================================*/
 // [neatly_recent]
 // See documentation: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
-function neatly_recent_posts_shortcode( $atts ) {
+function neatly_recent_shortcode( $atts ) {
 	extract( shortcode_atts( array(
 		'title_text' => 'Recent Posts',
 		'number_posts' => '3',
@@ -169,6 +171,6 @@ function neatly_recent_posts_shortcode( $atts ) {
 	ob_end_clean();
 	return $content;
 }	
-add_shortcode( 'neatly_recent_posts', 'neatly_recent_posts_shortcode' );
+add_shortcode( 'neatly_recent', 'neatly_recent_shortcode' );
 
 ?>
