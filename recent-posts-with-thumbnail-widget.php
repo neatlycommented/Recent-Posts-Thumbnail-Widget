@@ -128,7 +128,9 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 	}
 }
 
-add_action('widgets_init', function(){( register_widget('neatly_recent_posts_thumbnail');}); 
+add_action('widgets_init', function(){
+	register_widget('neatly_recent_posts_thumbnail');
+}); 
 
 
 /* Create a shortcode version
