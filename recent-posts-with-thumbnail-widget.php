@@ -29,22 +29,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 class neatly_recent_posts_thumbnail extends WP_Widget {
 
-    function neatly_recent_posts_thumbnail() {
-        $widget_ops = array(
-            'classname'=>'neatly-recent', // class that will be added to li element in widgeted area ul
-            'description'=> __('Display recent posts with thumbnails') // description displayed in admin
-            );
-        $control_ops = array( 'id_base' => 'neatly-recent-posts' );
-        $this->WP_Widget('neatly_recent_posts_thumbnail', __('Recent Posts with Thumbnails'), $widget_ops, $control_ops); // Name in  the control panel
-    }
+    function __construct() {
+        parent::__construct(
+        	'neatly-recent-posts', // Base ID
+        	'Recent Posts with Thumbnails', // Name
+        	array( 'description' => __('Display recent posts with thumbnails'), ) // Args
+        );
+}
 	
 	/* Our arguments
 	=============================================*/
 		
-    function widget($args, $instance) {
+    public function widget($args, $instance) {
             extract($args);
 			
-			$title = $instance['title']; 
+			$title = apply_filters( 'widget_title', $instance['title'] );
 			$number = $instance['number'];
 			$thumbsize = $instance['thumbsize'];
 			$show_title = isset($instance['show_title']) ? $instance['show_title'] : true;
@@ -57,7 +56,11 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 					.neatly-recent li { margin-bottom: 1em; }
 				  </style>';
 				  
-            echo $before_widget . $before_title . $title . $after_title; // widget title
+            echo $before_widget . $before_title;
+            if ( ! empty ( $title ) ) {
+            	echo $title;
+            }
+            echo $after_title; // widget title
   			
   			$args = array (
   				'posts_per_page' => $number,
@@ -82,30 +85,23 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
         }
         	  
 	
-	/* Saving updated information
-	=============================================*/
-	
-    function update( $new_instance, $old_instance ) {
-        $instance = $old_instance;
-        
-        $instance['title'] = strip_tags($new_instance['title']);
-        $instance['number'] = strip_tags($new_instance['number']);
-        $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
-        $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
-        $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
-          
-        return $instance;
-    }
-        
-	
 	/* The widget configuration form
 	=============================================*/
 	
-    function form( $instance ) {
-       $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) ); 
+    public function form( $instance ) {
         $title = strip_tags($instance['title']);
-        $number = strip_tags($instance['number']);
-        $thumbsize = strip_tags($instance['thumbsize']);
+        if (isset( $instance[ 'number' ] ) ) {
+        	$number = $instance['number'];
+        } else { $number = '5'; }
+        if (isset( $instance[ 'thumbsize' ] ) ) {
+        	$thumbsize = $instance['thumbsize'];
+        } else { $thumbsize = 'thumbnail'; }
+        if (isset( $instance[ 'show_title' ] ) ) {
+        	$show_title = true;
+        } else { $show_title = false; }
+        if (isset( $instance[ 'show_date' ] ) ) {
+        	$show_date = true;
+        } else { $show_date = false; }
 		?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
@@ -122,15 +118,29 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
 			<input id="<?php echo $this->get_field_id( 'show_date'); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" <?php checked($instance['show_date'], true) ?>  type="checkbox" /></label>
 		</p>
 	    
-	    
-	 
-<?php
-	}
+		<?php }
+		
+		/* Saving updated information
+		=============================================*/
+		
+		public function update( $new_instance, $old_instance ) {
+		    $instance = $old_instance;
+		    
+		    $instance['title'] = strip_tags($new_instance['title']);
+		    $instance['number'] = strip_tags($new_instance['number']);
+		    $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
+		    $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
+		    $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
+		      
+		    return $instance;
+		}
+		    
 }
 
-add_action('widgets_init', function(){
-	register_widget('neatly_recent_posts_thumbnail');
-}); 
+function register_neatly_recent_posts_thumbnail() {
+    register_widget( 'neatly_recent_posts_thumbnail' );
+}
+add_action( 'widgets_init', 'register_neatly_recent_posts_thumbnail' );
 
 
 /* Create a shortcode version
