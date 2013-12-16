@@ -196,6 +196,6 @@ function neatly_recent_posts_shortcode( $atts ) {
   return $content;
 } 
 
-add_shortcode( 'neatly_recent_posts', 'neatly_recent_posts_shortcode' );
+add_shortcode( 'neatly_recent', 'neatly_recent_posts_shortcode' );
 
 ?>
