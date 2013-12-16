@@ -11,7 +11,7 @@ Display a select number of recent posts with thumbnail and, optionally, post tit
 
 == Description ==
 
-This is a simple WordPress plugin that creates a recent posts widget that displays the post thumbnail and, optionally, the post title and date. You can select the number of posts to display and choose to hide or show the title and date.
+This is a simple WordPress plugin that creates a recent posts widget that displays the post thumbnail and, optionally, the post title and date, and "read more" text. You can select the number of posts to display and choose to hide or show the title and date.
 
 Very little styling has been applied so that the theme designer, developer or use can easily customize the appearance.
 
@@ -57,6 +57,12 @@ Sometimes you just want to go minimal. In that case, you can hide the title and/
 
     `[neatly_recent hide_title="true" hide_date="true"]`
 
+**Hide Read More Text**
+
+You also have the option of hiding the "read more" text that accompanies each post.
+
+    [neatly_recent hide_read_more="true"]
+
 **Thumbnail Size**
 
 Finally, you can select the size of thumbnail to display. Valid values include "medium," "large," "full," and any custom images sizes registered with `add_image_size()` - "thumbnail" is also valid, but it's the default so no need to declare it. E.g.:
@@ -80,6 +86,9 @@ You can do that with the shortcode, too, like so: `<?php echo do_shortcode('[nea
 2. With a bit of styling, it could look like this on the front end
 
 == Changelog ==
+
+= 0.5 =
+* Added read more text option
 
 = 0.4 =
 * Fixed syntax error (hat tip [@clintonwilmott](http://twitter.com/clintonwilmott))

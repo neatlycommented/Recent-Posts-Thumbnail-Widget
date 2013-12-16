@@ -43,6 +43,12 @@ Sometimes you just want to go minimal. In that case, you can hide the title and/
 
     [neatly_recent hide_title="true" hide_date="true"]
 
+**Hide Read More Text**
+
+You also have the option of hiding the "read more" text that accompanies each post.
+
+    [neatly_recent hide_read_more="true"]
+
 **Thumbnail Size**
 
 Finally, you can select the size of thumbnail to display. Valid values include "medium," "large," "full," and any custom images sizes registered with `add_image_size()` - "thumbnail" is also valid, but it's the default so no need to declare it. E.g.:
@@ -53,6 +59,7 @@ Finally, you can select the size of thumbnail to display. Valid values include "
 
 Changelog
 ------------
+* 0.6 Added "read more" text option
 * 0.5 Fixed error causing widget not to save (hat tip [@blakewatson](https://twitter.com/blakewatson))
 * 0.4 Fixed syntax error (hat tip [@clintonwilmott](http://twitter.com/clintonwilmott))
 * 0.3 Added shortcode and thumb size options
