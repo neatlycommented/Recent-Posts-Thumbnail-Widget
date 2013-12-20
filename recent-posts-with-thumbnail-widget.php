@@ -3,7 +3,7 @@
 Plugin Name: Recent Posts with Thumbnails Widget
 Plugin URI: https://github.com/zoerooney/Recent-Posts-Thumbnail-Widget
 Description: Creates a widget that displays recent posts in a nice, easy to style layout.
-Version: 0.4
+Version: 0.6
 Author: Zoe Rooney
 Author URI: http://zoerooney.com
 License: GPL2
@@ -45,6 +45,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
       
       $title = apply_filters( 'widget_title', $instance['title'] );
       $number = $instance['number'];
+      $category = $instance['category'];
       $thumbsize = $instance['thumbsize'];
       $show_title = isset($instance['show_title']) ? $instance['show_title'] : true;
       $show_date = isset($instance['show_date']) ? $instance['show_date'] : true;
@@ -63,9 +64,14 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
             }
             echo $after_title; // widget title
         
-        $args = array (
+        $args = array(
           'posts_per_page' => $number,
         );
+
+        if ( isset( $category )) {
+          $args['cat'] = $category;
+        }
+
         $neatly_posts = new WP_Query($args);
         if( $neatly_posts->have_posts() ) {
           echo '<ul>';
@@ -96,6 +102,9 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
         if (isset( $instance[ 'number' ] ) ) {
           $number = $instance['number'];
         } else { $number = '5'; }
+        if (isset( $instance[ 'category' ] ) ) {
+          $category = $instance['category'];
+        } else { $category = null; }
         if (isset( $instance[ 'thumbsize' ] ) ) {
           $thumbsize = $instance['thumbsize'];
         } else { $thumbsize = 'thumbnail'; }
@@ -116,13 +125,34 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
     
     <p style="border-bottom:4px double #eee;padding: 0 0 10px;">
       <label for="<?php echo $this->get_field_id( 'number' ); ?>">Number of Posts Displayed</label>
-      <input id="<?php echo $this->get_field_id( 'number'); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo esc_attr($number); ?>" type="number" style="width:100%;" /><br>
+      <input id="<?php echo $this->get_field_id( 'number'); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo esc_attr($number); ?>" type="number" style="width:100%;" /><br><br>
+
+      <label for="<?php echo $this->get_field_id( 'category' ); ?>">Display Posts from Category</label>
+      <?php 
+
+
+      $field_id = $this->get_field_id( 'category');
+      $name = $this->get_field_name( 'category' );
+      $selected = esc_attr($category);
+      $args = array( 
+        'id' => $field_id,
+        'show_option_all' => 'All',
+        'name' => $name,
+        'selected' => $selected
+      );
+      wp_dropdown_categories($args); 
+      
+      ?><br><br>
+      
       <label for="<?php echo $this->get_field_id( 'thumbsize' ); ?>">Thumbnail Size</label>
       <input id="<?php echo $this->get_field_id( 'thumbsize'); ?>" name="<?php echo $this->get_field_name( 'thumbsize' ); ?>" value="<?php echo esc_attr($thumbsize); ?>"  style="width:100%;" /><br><br>
+      
       <label for="<?php echo $this->get_field_id( 'show_title' ); ?>">Show the post titles?
       <input id="<?php echo $this->get_field_id( 'show_title'); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" <?php checked($instance['show_title'], true) ?>  type="checkbox" /></label><br><br>
+      
       <label for="<?php echo $this->get_field_id( 'show_date' ); ?>">Show the post dates?
       <input id="<?php echo $this->get_field_id( 'show_date'); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" <?php checked($instance['show_date'], true) ?>  type="checkbox" /></label><br><br>
+      
       <label for="<?php echo $this->get_field_id( 'show_read_more' ); ?>">Show "read more" text for each post?
       <input id="<?php echo $this->get_field_id( 'show_read_more'); ?>" name="<?php echo $this->get_field_name( 'show_read_more' ); ?>" <?php checked($instance['show_read_more'], true) ?>  type="checkbox" /></label>
     </p>
@@ -137,6 +167,7 @@ class neatly_recent_posts_thumbnail extends WP_Widget {
         
         $instance['title'] = strip_tags($new_instance['title']);
         $instance['number'] = strip_tags($new_instance['number']);
+        $instance['category'] = strip_tags($new_instance['category']);
         $instance['thumbsize'] = strip_tags($new_instance['thumbsize']);
         $instance['show_title'] = $new_instance['show_title'] ? 1 : 0;
         $instance['show_date'] = $new_instance['show_date'] ? 1 : 0; 
@@ -161,6 +192,7 @@ function neatly_recent_posts_shortcode( $atts ) {
   extract( shortcode_atts( array(
     'title_text' => 'Recent Posts',
     'number_posts' => '3',
+    'category' => '',
     'hide_title' => 'false',
     'hide_date' => 'false',
     'hide_read_more' => 'false',
@@ -169,9 +201,16 @@ function neatly_recent_posts_shortcode( $atts ) {
   
   ob_start();
   
-  $neatly_loop = new WP_Query( array(
-    'posts_per_page' => $number_posts
-  ));
+  $args = array(
+    'posts_per_page' => $number,
+  );
+
+  if ( isset( $category )) {
+    $args['cat'] = $category;
+  }
+
+  $neatly_loop = new WP_Query($args);
+
   echo '<div class="neatly-recent neatly-recent-shortcode"><h3>' . $title_text . '</h3>';
    if ( $neatly_loop->have_posts() ) : ?>
     <ul>
@@ -195,7 +234,6 @@ function neatly_recent_posts_shortcode( $atts ) {
   ob_end_clean();
   return $content;
 } 
-
 add_shortcode( 'neatly_recent', 'neatly_recent_posts_shortcode' );
 
 ?>
