@@ -7,7 +7,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display a select number of recent posts with thumbnail and, optionally, post title and date via widget or shortcode.
+Display a select number of recent posts with thumbnail and, optionally, post title and date via widget or shortcode. Optionally restrict the posts displayed to a particular category.
 
 == Description ==
 
@@ -86,6 +86,9 @@ You can do that with the shortcode, too, like so: `<?php echo do_shortcode('[nea
 2. With a bit of styling, it could look like this on the front end
 
 == Changelog ==
+
+= 0.6 =
+* Added ability to filter by category
 
 = 0.5 =
 * Added read more text option

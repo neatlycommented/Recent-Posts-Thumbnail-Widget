@@ -1,7 +1,7 @@
 Recent Posts with Thumbnail
 ===========================
 
-This is a simple WordPress plugin that creates a recent posts widget that displays the post thumbnail and, optionally, the post title and date. You can select the number of posts to display and choose to hide or show the title and date.
+This is a simple WordPress plugin that creates a recent posts widget that displays the post thumbnail and, optionally, the post title and date. You can select the number of posts to display and choose to hide or show the title, date, and "read more" text. You may also restrict the posts displayed to a particular category.
 
 Very little styling has been applied so that the theme designer, developer or use can easily customize the appearance.
 
@@ -59,6 +59,8 @@ Finally, you can select the size of thumbnail to display. Valid values include "
 
 Changelog
 ------------
+
+* 0.7 Added ability to filter by category
 * 0.6 Added "read more" text option
 * 0.5 Fixed error causing widget not to save (hat tip [@blakewatson](https://twitter.com/blakewatson))
 * 0.4 Fixed syntax error (hat tip [@clintonwilmott](http://twitter.com/clintonwilmott))
